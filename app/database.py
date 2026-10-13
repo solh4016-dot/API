@@ -33,3 +33,12 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
+# Función para obtener la conexión a la base de datos
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
