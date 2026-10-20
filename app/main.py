@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import products, users
+from .routers import products, users, carts
 
 app = FastAPI(
     title="Fake Store API (clon local)",
@@ -25,6 +25,7 @@ app.add_middleware(
 
 app.include_router(users.router)
 app.include_router(products.router)
+app.include_router(carts.router)
 
 
 @app.get("/", tags=["Estado"])
