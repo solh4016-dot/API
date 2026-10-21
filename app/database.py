@@ -14,7 +14,7 @@ DB_HOST = os.getenv("DB_HOST") or "localhost"
 DB_PORT = int(os.getenv("DB_PORT") or "3306")
 DB_NAME = os.getenv("DB_NAME") or "fakestore_clone"
 
-# Construir la conexión de forma segura
+# Construir la URL de conexión
 DATABASE_URL = URL.create(
     drivername="mysql+pymysql",
     username=DB_USER,
@@ -24,7 +24,21 @@ DATABASE_URL = URL.create(
     database=DB_NAME
 )
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+# Configurar SSL cuando usamos Aiven
+connect_args = {}
+
+if DB_HOST.endswith(".aivencloud.com"):
+    connect_args = {
+        "ssl": {}
+    }
+
+# Crear conexión con MySQL
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_recycle=280,
+    connect_args=connect_args
+)
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -34,11 +48,10 @@ SessionLocal = sessionmaker(
 
 Base = declarative_base()
 
-# Función para obtener la conexión a la base de datos
+# Función para obtener la conexión
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
-
