@@ -34,3 +34,11 @@ def root():
         "mensaje": "API funcionando correctamente",
         "documentacion": "/docs",
     }
+
+
+@app.on_event('startup')
+def create_missing_tables():
+    # Solo crea tablas ausentes; no toca usuarios/productos existentes.
+    from .database import Base, engine
+    from . import models
+    Base.metadata.create_all(bind=engine)
