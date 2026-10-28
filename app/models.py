@@ -1,5 +1,5 @@
 #vercel.com
-from sqlalchemy import Column, Float, Integer, String, Text
+from sqlalchemy import Column, Float, Integer, String, Text, DateTime, ForeignKey
 
 from .database import Base
 
@@ -34,3 +34,17 @@ class Product(Base):
     description = Column(Text, nullable=False)
     category = Column(String(80), nullable=False, index=True)
     image = Column(String(500), nullable=False)
+
+
+class Cart(Base):
+    __tablename__ = 'carts'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    date = Column(DateTime, nullable=False)
+
+class CartLine(Base):
+    __tablename__ = 'cart_lines'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    cart_id = Column(Integer, ForeignKey('carts.id', ondelete='CASCADE'), nullable=False, index=True)
+    product_id = Column(Integer, nullable=False)
+    quantity = Column(Integer, nullable=False)
