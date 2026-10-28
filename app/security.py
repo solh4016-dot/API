@@ -56,3 +56,18 @@ def decode_token(token: str) -> dict:
     if payload.get("exp", 0) < int(time.time()):
         raise ValueError("Token expirado")
     return payload
+
+
+def require_auditor_or_admin(authorization: str | None = None):
+    """Se usa mediante la dependencia con Header, no directamente."""
+    from fastapi import HTTPException
+    if not authorization or not authorization.startswith('Bearer '):
+        raise HTTPException(status_code=401, detail='Inicia sesión para consultar esta información')
+    try:
+        claims = decode_token(authorization[7:])
+        user_id = int(claims['sub'])
+    except (ValueError, TypeError, KeyError):
+        raise HTTPException(status_code=401, detail='Sesión inválida o expirada')
+    if user_id not in (1, 2):
+        raise HTTPException(status_code=403, detail='Acceso reservado a Administrador y Auditor')
+    return user_id
