@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..models import Cart, CartLine
+from ..models.models import Cart, CartLine
 from ..dependencies import authorized_reader
 
 router = APIRouter(prefix='/carts', tags=['Carritos'])
