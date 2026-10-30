@@ -3,7 +3,8 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from .. import models, schemas
+from ..models import models
+from ..views import schemas
 from ..database import get_db
 
 router = APIRouter(prefix="/products", tags=["Productos"])
