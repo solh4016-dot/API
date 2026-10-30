@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import products, users, carts
+from .controllers import carts, products, users
 
 app = FastAPI(
     title="Fake Store API (clon local)",
