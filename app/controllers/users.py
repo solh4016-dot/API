@@ -1,13 +1,11 @@
-from typing import List
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Header, status
 from sqlalchemy.orm import Session
 
-from .. import models, schemas
+from ..models import models
+from ..views import schemas
 from ..database import get_db
 from ..security import create_token, decode_token
 from ..dependencies import authorized_reader
-from fastapi import Header
 
 router = APIRouter(tags=["Usuarios y autenticación"])
 
