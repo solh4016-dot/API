@@ -24,7 +24,7 @@ DATABASE_URL = URL.create(
     database=DB_NAME
 )
 
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_recycle=1800, connect_args={"connect_timeout": 8})
 
 SessionLocal = sessionmaker(
     autocommit=False,
@@ -41,5 +41,4 @@ def get_db():
         yield db
     finally:
         db.close()
-
 

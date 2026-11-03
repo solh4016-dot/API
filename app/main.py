@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .controllers import carts, products, users
+from .controllers import products, users, carts
 
 app = FastAPI(
     title="Fake Store API (clon local)",
@@ -36,9 +36,23 @@ def root():
     }
 
 
-@app.on_event('startup')
-def create_missing_tables():
-    # Solo crea tablas ausentes; no toca usuarios/productos existentes.
-    from .database import Base, engine
-    from . import models
-    Base.metadata.create_all(bind=engine)
+@app.get("/health", tags=["Estado"])
+def health():
+    """Comprueba que FastAPI está activo sin depender de MySQL."""
+    return {"status": "ok", "service": "fastapi"}
+
+
+@app.get("/health/db", tags=["Estado"])
+def health_database():
+    """Comprueba la conexión real a MySQL, sin exponer credenciales."""
+    from fastapi import HTTPException
+    from sqlalchemy import text
+    from sqlalchemy.exc import SQLAlchemyError
+    from .database import engine
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "connected"}
+    except SQLAlchemyError:
+        raise HTTPException(status_code=503, detail="No se puede conectar con MySQL; revisa la configuración en Render")

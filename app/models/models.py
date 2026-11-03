@@ -1,7 +1,7 @@
 #vercel.com
 from sqlalchemy import Column, Float, Integer, String, Text, DateTime, ForeignKey
 
-from .database import Base
+from ..database import Base
 
 
 class User(Base):

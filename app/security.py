@@ -10,6 +10,9 @@ import hmac
 import json
 import os
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 JWT_SECRET = os.getenv("JWT_SECRET", "cambia-este-secreto-antes-de-entregar")
 TOKEN_TTL_SECONDS = 60 * 60  # 1 hora

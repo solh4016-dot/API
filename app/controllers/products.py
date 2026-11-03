@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from ..models import models
+from .. import models
 from ..views import schemas
 from ..database import get_db
 
